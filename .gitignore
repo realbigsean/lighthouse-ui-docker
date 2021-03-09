@@ -1,0 +1,7 @@
+network/
+secrets/
+geth-data/
+lighthouse-data/
+nginx/
+validator_keys/
+.env

@@ -1,0 +1,68 @@
+version: "3.0"
+
+services:
+  nginx:
+    image: nginx/latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/error.log:/etc/nginx/error_log.log
+      - ./nginx/cache/:/etc/nginx/cache
+      - /etc/letsencrypt/:/etc/letsencrypt/
+    ports:
+      - 80:80
+      - 443:443
+  beacon_node:
+    image: sigp/lighthouse:latest
+    volumes:
+      - ./lighthouse-data:/root/.lighthouse
+      - ./scripts:/root/scripts
+    ports:
+      - 5052:5052/tcp
+      - 5054:5054/tcp     # metrics endpoint
+      - 9000:9000/tcp
+      - 9000:9000/udp
+    env_file: .env
+    command: sh /root/scripts/start-beacon-node.sh
+    restart: on-failure
+  validator_client:
+    image: sigp/lighthouse:latest
+    volumes:
+      - ./lighthouse-data:/root/.lighthouse
+      - ./scripts:/root/scripts
+      - ./validator_keys:/root/validator_keys
+    depends_on:
+      - beacon_node
+    ports:
+      - 5064:5064/tcp     # metrics endpoint
+    env_file: .env
+    command: sh /root/scripts/start-validator-client.sh
+    restart: on-failure
+  geth:
+    image: ethereum/client-go
+    entrypoint: /bin/sh
+    volumes:
+      - ./geth-data:/root/.ethereum
+      - ./scripts:/root/scripts
+    ports:
+      - 30303:30303/tcp
+      - 30303:30303/udp
+    env_file: .env
+    command: /root/scripts/start-geth.sh
+    restart: on-failure
+  prometheus:
+    build:
+      context: prometheus
+    volumes:
+      - prometheus-data:/prometheus
+      - type: bind
+        source: ./scrape-targets
+        target: /prometheus/targets
+    restart: always
+    network_mode: host
+  grafana:
+    build:
+      context: grafana
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: always
+    network_mode: host
