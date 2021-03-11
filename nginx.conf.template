@@ -1,0 +1,82 @@
+events {}
+http {
+
+  upstream frontend {
+    server frontend:3000;
+  }
+  upstream beacon_node {
+    server beacon_node:5052;
+  }
+  upstream validator_client {
+    server validator_client:5062;
+  }
+  upstream geth {
+    server geth:8545;
+  }
+  upstream beacon_metrics {
+    server beacon_node:5054;
+  }
+  upstream validator_metrics {
+    server validator_client:5064;
+  }
+  upstream prometheus {
+    server prometheus:9090;
+  }
+  upstream grafana {
+    server grafana:3333;
+  }
+
+  server {
+    server_name ${NGINX_HOST};
+    ssl_certificate /etc/letsencrypt/${NGINX_HOST}.crt;
+    ssl_certificate_key /etc/letsencrypt/${NGINX_HOST}.key;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    auth_basic "Admin Zone";
+    auth_basic_user_file conf/htpasswd;
+
+    listen 443 ssl;
+
+    location / {
+      proxy_pass http://frontend;
+      rewrite ^/frontend(.*)$ $1 break;
+      auth_basic off;
+    }
+
+    location /beacon_node {
+      proxy_pass http://beacon_node;
+      rewrite ^/beacon_node(.*)$ /$1 break;
+    }
+
+    location /beacon_metrics {
+      proxy_pass http://beacon_metrics;
+      rewrite ^/beacon_metrics(.*)$ /$1 break;
+    }
+
+    location /validator_client {
+      proxy_pass http://validator_client;
+      rewrite ^/validator_client(.*)$ /$1 break;
+    }
+
+    location /validator_metrics {
+      proxy_pass http://validator_metrics;
+      rewrite ^/validator_metrics(.*)$ /$1 break;
+    }
+
+    location /geth {
+      proxy_pass http://geth;
+      rewrite ^/geth(.*)$ /$1 break;
+    }
+
+    location /prometheus {
+      proxy_pass http://prometheus;
+      rewrite ^/prometheus(.*)$ /$1 break;
+    }
+
+    location /grafana {
+      proxy_pass http://grafana;
+      rewrite ^/grafana(.*)$ /$1 break;
+    }
+  }
+}
