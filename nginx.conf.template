@@ -36,6 +36,7 @@ http {
     auth_basic "Admin Zone";
     auth_basic_user_file conf/htpasswd;
 
+    listen 80;
     listen 443 ssl;
 
     location / {

@@ -11,6 +11,8 @@ services:
       - prometheus
       - grafana
       - geth
+      - certbot
+    restart: on-failure
     env_file: .env
     volumes:
       - certs:/etc/letsencrypt
@@ -18,7 +20,7 @@ services:
       - ./nginx/error.log:/etc/nginx/error_log.log
       - ./nginx/cache/:/etc/nginx/cache
     ports:
-      - 80:80
+      - 8080:80
       - 443:443
   certbot:
     container_name: certbot
