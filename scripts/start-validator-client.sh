@@ -18,5 +18,6 @@ if [ "$START_VALIDATOR" != "" ]; then
 		--network $NETWORK \
 		validator \
 		$METRICS_PARAMS \
+		--http \
 		--beacon-node http://beacon_node:5052
 fi

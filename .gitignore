@@ -5,3 +5,4 @@ lighthouse-data/
 nginx/
 validator_keys/
 .env
+.nginx.env

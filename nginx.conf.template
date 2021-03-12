@@ -34,7 +34,7 @@ http {
     ssl_ciphers HIGH:!aNULL:!MD5;
 
     auth_basic "Admin Zone";
-    auth_basic_user_file conf/htpasswd;
+    auth_basic_user_file /etc/nginx/conf.d/nginx.htpasswd;
 
     listen 80;
     listen 443 ssl;
@@ -47,37 +47,37 @@ http {
 
     location /beacon_node {
       proxy_pass http://beacon_node;
-      rewrite ^/beacon_node(.*)$ /$1 break;
+      rewrite ^/beacon_node(.*)$ $1 break;
     }
 
     location /beacon_metrics {
       proxy_pass http://beacon_metrics;
-      rewrite ^/beacon_metrics(.*)$ /$1 break;
+      rewrite ^/beacon_metrics(.*)$ $1 break;
     }
 
     location /validator_client {
       proxy_pass http://validator_client;
-      rewrite ^/validator_client(.*)$ /$1 break;
+      rewrite ^/validator_client(.*)$ $1 break;
     }
 
     location /validator_metrics {
       proxy_pass http://validator_metrics;
-      rewrite ^/validator_metrics(.*)$ /$1 break;
+      rewrite ^/validator_metrics(.*)$ $1 break;
     }
 
     location /geth {
       proxy_pass http://geth;
-      rewrite ^/geth(.*)$ /$1 break;
+      rewrite ^/geth(.*)$ $1 break;
     }
 
     location /prometheus {
       proxy_pass http://prometheus;
-      rewrite ^/prometheus(.*)$ /$1 break;
+      rewrite ^/prometheus(.*)$ $1 break;
     }
 
     location /grafana {
       proxy_pass http://grafana;
-      rewrite ^/grafana(.*)$ /$1 break;
+      rewrite ^/grafana(.*)$ $1 break;
     }
   }
 }

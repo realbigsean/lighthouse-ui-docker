@@ -13,19 +13,19 @@ services:
       - geth
       - certbot
     restart: on-failure
-    env_file: .env
+    env_file: .nginx.env
+    command: sh /scripts/start-nginx.sh
     volumes:
       - certs:/etc/letsencrypt
       - ./nginx.conf.template:/etc/nginx/templates/nginx.conf.template
-      - ./nginx/error.log:/etc/nginx/error_log.log
-      - ./nginx/cache/:/etc/nginx/cache
+      - ./scripts:/scripts
     ports:
       - 8080:80
       - 443:443
   certbot:
     container_name: certbot
     image: certbot/certbot
-    env_file: .env
+    env_file: .nginx.env
     volumes:
     - ./scripts:/root/scripts
     - certs:/etc/letsencrypt/
