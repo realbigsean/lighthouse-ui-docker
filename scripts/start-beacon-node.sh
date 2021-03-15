@@ -42,8 +42,10 @@ exec lighthouse \
 	beacon_node \
 	--eth1-endpoints $VOTING_ETH1_NODES \
 	--http \
-	--http-address 0.0.0.0 \
+	--http-allow-origin '*' \
+    --http-address 0.0.0.0 \
 	--metrics \
+	--metrics-allow-origin '*' \
 	--metrics-address 0.0.0.0 \
 	$GRAFFITI_PARAM \
 	$ETH1_FLAG \
