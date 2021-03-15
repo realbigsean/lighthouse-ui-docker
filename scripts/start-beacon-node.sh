@@ -24,10 +24,6 @@ if [ "$START_SLASHER" != "" ]; then
 	SLASHER_FLAG="--slasher"
 fi
 
-if [ "$SEARCH_BLOCKS" != ""]; then
-	SEARCH_BLOCKS_PARAM="--eth1-blocks-per-log-query $SEARCH_BLOCKS"
-fi
-
 if [ "$ENABLE_MONITORING_AUTO" != "" ]; then
 	ENABLE_MONITORING_AUTO_FLAG="--validator-monitor-auto"
 fi
@@ -47,7 +43,8 @@ exec lighthouse \
 	--eth1-endpoints $VOTING_ETH1_NODES \
 	--http \
 	--http-address 0.0.0.0 \
-	$METRICS_PARAMS \
+	--metrics \
+	--metrics-address 0.0.0.0 \
 	$GRAFFITI_PARAM \
 	$ETH1_FLAG \
 	$SLASHER_FLAG \

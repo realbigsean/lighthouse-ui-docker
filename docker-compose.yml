@@ -32,7 +32,7 @@ services:
     entrypoint: sh /root/scripts/start-certbot.sh
   beacon_node:
     container_name: beacon_node
-    image: seananderson33/lighthouse:health
+    image: sigp/lighthouse:latest
     volumes:
       - ./lighthouse-data:/root/.lighthouse
       - ./scripts:/root/scripts
@@ -44,7 +44,7 @@ services:
     restart: on-failure
   validator_client:
     container_name: validator_client
-    image: seananderson33/lighthouse:health
+    image: sigp/lighthouse:latest
     volumes:
       - ./lighthouse-data:/root/.lighthouse
       - ./scripts:/root/scripts
